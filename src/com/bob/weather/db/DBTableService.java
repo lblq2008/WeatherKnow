@@ -21,9 +21,16 @@ import android.database.sqlite.SQLiteDatabase;
 public class DBTableService {
 
 	private DBHelper dbHelper = null;
-
+	private static DBTableService dbService ;
 	public DBTableService(Context context) {
 		this.dbHelper = new DBHelper(context);
+	}
+	
+	public synchronized static DBTableService getInstance(Context context){
+		if(dbService == null){
+			dbService = new DBTableService(context);
+		}
+		return dbService ;
 	}
 
 	/**
@@ -177,6 +184,32 @@ public class DBTableService {
 		List<City> list = new ArrayList<City>();
 		SQLiteDatabase db = dbHelper.getReadableDatabase();
 		Cursor cursor = db.query(DBHelper.CITYTABLE, null, " province_id = ? " , new String[]{provinceId + ""} , null, null, null);
+		while (cursor.moveToNext()) {
+			City city = new City();
+			city.setId(Integer.parseInt(cursor.getString(cursor.getColumnIndex("id"))));
+			city.setCityName(cursor.getString(cursor.getColumnIndex("city_name")));
+			city.setCityCode(cursor.getString(cursor.getColumnIndex("city_code")));
+			city.setProvinceId(Integer.parseInt(cursor.getString(cursor.getColumnIndex("province_id"))));
+			list.add(city);
+		}
+		if(cursor != null){
+			cursor.close();
+		}
+		if (db != null) {
+			db.close();
+		}
+		return list ;
+	}
+	
+	/**
+	 * 获取某一省份所有城市的信息
+	 * @return
+	 * @date 2014-10-13 上午10:59:38
+	 */
+	public List<City> getAllCities(){
+		List<City> list = new ArrayList<City>();
+		SQLiteDatabase db = dbHelper.getReadableDatabase();
+		Cursor cursor = db.query(DBHelper.CITYTABLE, null, null , null , null, null, null);
 		while (cursor.moveToNext()) {
 			City city = new City();
 			city.setId(Integer.parseInt(cursor.getString(cursor.getColumnIndex("id"))));
