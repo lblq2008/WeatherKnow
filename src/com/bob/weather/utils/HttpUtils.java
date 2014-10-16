@@ -95,6 +95,7 @@ public class HttpUtils {
 	public static void requestHttpGet(ProgressDialog progressDialog,
 			final String path,
 			final HttpCallBackListener listener) {
+		LogUtil.i("HttpUtils", "requestHttpGet.path: " + path);
 		if (progressDialog != null) {
 			progressDialog.show();
 		}

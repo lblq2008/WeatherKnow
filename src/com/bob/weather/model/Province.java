@@ -42,4 +42,10 @@ public class Province implements Serializable{
 		this.provinceName = provinceName;
 		this.provinceCode = provinceCode;
 	}
+	
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return provinceName;
+	}
 }

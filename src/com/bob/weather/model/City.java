@@ -69,4 +69,9 @@ public class City implements Serializable{
 		this.provinceId = provinceId;
 	}
 
+	@Override
+	public String toString() {
+		return cityName;
+	}
+	
 }

@@ -34,6 +34,7 @@ public class LaunchActivity extends BaseActivity {
 		// TODO Auto-generated method stub
 		view = View.inflate(this, R.layout.activity_launch, null);
 		setContentView(view);
+		animationLaunch(view);
 		progressDialog = new ProgressDialog(this);
 		progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 		progressDialog.setMessage("正在初始化数据,请稍后...");

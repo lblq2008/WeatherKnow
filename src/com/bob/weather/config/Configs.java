@@ -15,6 +15,9 @@ public class Configs {
 	 * 4.提供手动更新和后台自动更新天气信息的功能 
 	 */
 	
+	//GitHub地址
+	//https://github.com/lblq2008/WeatherKnow.git
+	
 	public static String BaseUrl = "http://www.weather.com.cn/" ;
 	 
 	/**

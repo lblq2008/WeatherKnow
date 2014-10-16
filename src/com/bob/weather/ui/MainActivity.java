@@ -2,6 +2,7 @@ package com.bob.weather.ui;
 
 import com.bob.weather.ui.R;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 /**
@@ -15,5 +16,7 @@ public class MainActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		Intent intent = new Intent(this, ChoseCityActivity.class);
+		startActivity(intent);
 	}
 }
