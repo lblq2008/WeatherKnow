@@ -49,7 +49,8 @@ public class Configs {
 	 * 根据天气代号获取天气信息；
 	 * 返回：{"weatherinfo":{"city":"昆山","cityid":"101190404","temp1":"25℃","temp2":"17℃","weather":"多云","img1":"d1.gif","img2":"n1.gif","ptime":"11:00"}}
 	 */
-	public static String WeatherInfoUrl = BaseUrl + "data/cityinfo/101190404.html";
+	public static String WeatherInfoUrl = BaseUrl + "data/cityinfo/";
+	public static String html = ".html" ;
 	
 	public static String WeatherDetailUrl = "http://m.weather.com.cn/data/101190404.html";//暂停维护,不使用
 }

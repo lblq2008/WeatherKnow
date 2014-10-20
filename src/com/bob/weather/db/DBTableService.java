@@ -6,6 +6,7 @@ import java.util.List;
 import com.bob.weather.model.City;
 import com.bob.weather.model.Country;
 import com.bob.weather.model.Province;
+import com.bob.weather.model.WeatherInfo;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -31,6 +32,57 @@ public class DBTableService {
 			dbService = new DBTableService(context);
 		}
 		return dbService ;
+	}
+	
+	public void addWeatherInfo(WeatherInfo info){
+		SQLiteDatabase db = dbHelper.getWritableDatabase();
+		ContentValues values = new ContentValues();
+		values.put("city_name", info.getCityName());
+		values.put("weather_code", info.getWeatherCode());
+		values.put("weather_info", info.getWeatherInfo());
+		db.insert(DBHelper.WEATHERTABLE, null, values);
+		if (db != null) {
+			db.close();
+		}
+	}
+	
+	public void updateWeatherInfo(WeatherInfo info){
+//		if(deleteWeatherInfo(info)>0){
+//			addWeatherInfo(info);
+//			return ;
+//		}
+		SQLiteDatabase db = dbHelper.getWritableDatabase();
+		ContentValues values = new ContentValues();
+		values.put("city_name", info.getCityName());
+		values.put("weather_code", info.getWeatherCode());
+		values.put("weather_info", info.getWeatherInfo());
+		db.update(DBHelper.WEATHERTABLE, values, " weather_code = ? ", new String[]{info.getWeatherCode()});
+		if (db != null) {
+			db.close();
+		}
+	}
+	
+	public int deleteWeatherInfo(WeatherInfo info){
+		SQLiteDatabase db = dbHelper.getWritableDatabase();
+		int count = db.delete(DBHelper.WEATHERTABLE, " weather_code = ? ", new String[]{info.getWeatherCode()});
+		if (db != null) {
+			db.close();
+		}
+		return count ;
+	}
+	
+	public List<WeatherInfo> getWeatherInfos(){
+		List<WeatherInfo> list = new ArrayList<WeatherInfo>();
+		SQLiteDatabase db = dbHelper.getReadableDatabase();
+		Cursor cursor = db.query(DBHelper.WEATHERTABLE, null, null, null, null, null, null);
+		while (cursor.moveToNext()) {
+			WeatherInfo weatherInfo = new WeatherInfo();
+			weatherInfo.setCityName(cursor.getString(cursor.getColumnIndex("city_name")));
+			weatherInfo.setWeatherCode(cursor.getString(cursor.getColumnIndex("weather_code")));
+			weatherInfo.setWeatherInfo(cursor.getString(cursor.getColumnIndex("weather_info")));
+			list.add(weatherInfo);
+		}
+		return list ;
 	}
 
 	/**

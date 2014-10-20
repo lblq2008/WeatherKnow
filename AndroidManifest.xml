@@ -28,6 +28,8 @@
         </activity>
         <activity android:name="com.bob.weather.ui.MainActivity"/>
         <activity android:name="com.bob.weather.ui.ChoseCityActivity"/>
+        <service android:name="com.bob.weather.sys.UpdateWeatherService"/>
+        <receiver android:name="com.bob.weather.sys.AlarmReceiver"/>
     </application>
 
 </manifest>

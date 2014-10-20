@@ -16,6 +16,9 @@ public class DBHelper extends SQLiteOpenHelper {
 	public static final String PROVINCETABLE = "province";//省份表名称
 	public static final String CITYTABLE = "city";//城市表名称
 	public static final String COUNTRYTABLE = "country";//县城表名称
+	
+	public static final String WEATHERTABLE = "weather_infos";//展示天气表
+	
 	public static final String CREATE_PROVINCE = "create table "
 			+ PROVINCETABLE + " (id integer primary key autoincrement, "
 			+ "province_name text, " 
@@ -30,6 +33,11 @@ public class DBHelper extends SQLiteOpenHelper {
 			+ "country_name text, " 
 			+ "country_code text, "
 			+ "city_id integer) ";
+	public static final String CREATE_WEATHER = "create table " + WEATHERTABLE
+			+ " (id integer primary key autoincrement, "
+			+ "city_name text, " 
+			+ "weather_code text, "
+			+ "weather_info text) ";
 
 	public DBHelper(Context context) {
 		super(context, DBNAME, null, DBVERSION);
@@ -42,6 +50,7 @@ public class DBHelper extends SQLiteOpenHelper {
 		db.execSQL(CREATE_PROVINCE);//创建省份表
 		db.execSQL(CREATE_CITY);//创建城市表
 		db.execSQL(CREATE_COUNTRY);//创建县城表
+		db.execSQL(CREATE_WEATHER);//创建天气信息表
 	}
 
 	@Override

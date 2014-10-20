@@ -1,11 +1,20 @@
 package com.bob.weather.utils;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.text.TextUtils;
 
 import com.bob.weather.db.DBTableService;
 import com.bob.weather.model.City;
 import com.bob.weather.model.Country;
 import com.bob.weather.model.Province;
+import com.bob.weather.model.WeatherInfo;
 
 /**
  * 数据操作类
@@ -81,4 +90,48 @@ public class Utility {
 		}
 		return false;
 	}
-}
+	//{"weatherinfo":{"city":"昆山","cityid":"101190404","temp1":"25℃","temp2":"17℃","weather":"多云","img1":"d1.gif","img2":"n1.gif","ptime":"11:00"}}
+	/**
+	 * 解析天气信息
+	 * @param json
+	 * @return
+	 * @date 2014-10-20 上午11:13:40
+	 */
+	public static List<Map<String,String>> parseWeatherInfo(DBTableService dbService){
+		if(dbService == null){
+			return null ;
+		}
+		List<WeatherInfo> list = dbService.getWeatherInfos();
+		List<Map<String,String>> maps = new ArrayList<Map<String,String>>();
+		for (int i = 0; i < list.size(); i++) {
+			try {
+				Map<String,String> map = new HashMap<String, String>();
+				JSONObject jsonObject = new JSONObject(list.get(i).getWeatherInfo()).getJSONObject("weatherinfo");
+				map.put("city", jsonObject.getString("city"));
+				map.put("temp1", jsonObject.getString("temp1"));
+				map.put("temp2", jsonObject.getString("temp2"));
+				map.put("weather", jsonObject.getString("weather"));
+				map.put("ptime", jsonObject.getString("ptime"));
+				maps.add(map);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return maps ;
+	}
+	
+	public static void handleWeatherInfo(DBTableService dbService , String response){
+		JSONObject jsonObject;
+		try {
+			jsonObject = new JSONObject(response).getJSONObject("weatherinfo");
+			String cityName = jsonObject.getString("city");
+			String weatherCode = jsonObject.getString("cityid");
+			dbService.addWeatherInfo(new WeatherInfo(cityName, weatherCode, response));
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+ }

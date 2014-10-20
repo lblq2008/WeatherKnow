@@ -3,31 +3,34 @@ package com.bob.weather.ui;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.bob.weather.config.Configs;
-import com.bob.weather.db.DBTableService;
-import com.bob.weather.inf.HttpCallBackListener;
-import com.bob.weather.model.City;
-import com.bob.weather.model.Country;
-import com.bob.weather.model.Province;
-import com.bob.weather.utils.HttpUtils;
-import com.bob.weather.utils.LogUtil;
-import com.bob.weather.utils.Utility;
-
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.BaseAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ListView;
+
+import com.bob.weather.config.Configs;
+import com.bob.weather.db.DBTableService;
+import com.bob.weather.inf.HttpCallBackListener;
+import com.bob.weather.model.City;
+import com.bob.weather.model.Country;
+import com.bob.weather.model.Province;
+import com.bob.weather.model.WeatherInfo;
+import com.bob.weather.utils.HttpUtils;
+import com.bob.weather.utils.LogUtil;
+import com.bob.weather.utils.Utility;
 
 /**
  * 城市选择页面
@@ -89,6 +92,14 @@ public class ChoseCityActivity extends BaseActivity {
 					Toast.makeText(ChoseCityActivity.this, "无县城信息",Toast.LENGTH_SHORT).show();
 				}
 				break;
+			case 4:
+				progressDialog.dismiss();
+				Toast.makeText(ChoseCityActivity.this, "选择城市成功",Toast.LENGTH_SHORT).show();
+				break;
+			case 5:
+				progressDialog.dismiss();
+				Toast.makeText(ChoseCityActivity.this, "选择城市失败",Toast.LENGTH_SHORT).show();
+				break;
 			default:
 				break;
 			}
@@ -128,8 +139,7 @@ public class ChoseCityActivity extends BaseActivity {
 		lv_city = (ListView) this.findViewById(R.id.lv_city);
 		lv_city.setOnItemClickListener(new OnItemClickListener() {
 			@Override
-			public void onItemClick(AdapterView<?> arg0, View view,
-					int position, long arg3) {
+			public void onItemClick(AdapterView<?> arg0, View view, int position, long arg3) {
 				// TODO Auto-generated method stub
 				citiesAdapter.setSelectItem(position);
 				loadCountry(cities.get(position));
@@ -143,6 +153,35 @@ public class ChoseCityActivity extends BaseActivity {
 					int position, long arg3) {
 				// TODO Auto-generated method stub
 				countriesAdapter.setSelectItem(position);
+			}
+		});
+		
+		lv_country.setOnItemLongClickListener(new OnItemLongClickListener() {
+			@Override
+			public boolean onItemLongClick(AdapterView<?> arg0, View v,
+					int position, long arg3) {
+				// TODO Auto-generated method stub
+				String url = Configs.ProvincesUrl + countries.get(position).getCountryCode() + Configs.pxiel ;
+				progressDialog.setMessage("正在选择城市...");
+				HttpUtils.requestHttpGet(progressDialog, url, new HttpCallBackListener() {
+					@Override
+					public void onSuccess(String response) {
+						// TODO Auto-generated method stub
+						if(!TextUtils.isEmpty(response)){
+							dbService.addWeatherInfo(new WeatherInfo("", response.split("\\|")[1], ""));
+							handler.sendEmptyMessage(4);
+						}else{
+							handler.sendEmptyMessage(5);
+						}
+					}
+					
+					@Override
+					public void onFailed(String message) {
+						// TODO Auto-generated method stub
+						handler.sendEmptyMessage(5);
+					}
+				});
+				return true;
 			}
 		});
 
@@ -392,10 +431,8 @@ public class ChoseCityActivity extends BaseActivity {
 			ViewHolder holder = null;
 			if (convertView == null) {
 				holder = new ViewHolder();
-				convertView = mInflater.inflate(
-						R.layout.activity_chose_city_item, null);
-				holder.tv_name = (TextView) convertView
-						.findViewById(R.id.tv_name);
+				convertView = mInflater.inflate(R.layout.activity_chose_city_item, null);
+				holder.tv_name = (TextView) convertView.findViewById(R.id.tv_name);
 				convertView.setTag(holder);
 			} else {
 				holder = (ViewHolder) convertView.getTag();
