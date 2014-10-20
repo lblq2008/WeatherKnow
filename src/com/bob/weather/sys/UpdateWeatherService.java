@@ -7,6 +7,7 @@ import com.bob.weather.db.DBTableService;
 import com.bob.weather.inf.HttpCallBackListener;
 import com.bob.weather.model.WeatherInfo;
 import com.bob.weather.utils.HttpUtils;
+import com.bob.weather.utils.LogUtil;
 import com.bob.weather.utils.Utility;
 
 import android.app.AlarmManager;
@@ -28,6 +29,7 @@ public class UpdateWeatherService extends Service {
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		// TODO Auto-generated method stub
 		List<WeatherInfo> list = DBTableService.getInstance(this).getWeatherInfos();
+		LogUtil.i("UpdateWeatherService", "城市数量："+ list.size());
 		for (int i = 0; i < list.size(); i++) {
 			String url = Configs.WeatherInfoUrl + list.get(i).getWeatherCode() + Configs.html;
 			HttpUtils.requestHttpGet(null, url, new HttpCallBackListener() {

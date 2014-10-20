@@ -1,5 +1,7 @@
 package com.bob.weather.ui;
 
+import com.bob.weather.sys.UpdateWeatherService;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -43,6 +45,14 @@ public class LaunchActivity extends BaseActivity {
 			@Override
 			public void onAnimationEnd(Animation animation) {
 				// TODO Auto-generated method stub
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						// TODO Auto-generated method stub
+						Intent updateIntent = new Intent(LaunchActivity.this, UpdateWeatherService.class);
+						startService(updateIntent);
+					}
+				}).start();
 				Intent intent = new Intent(LaunchActivity.this,
 						MainActivity.class);
 				startActivity(intent);

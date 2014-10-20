@@ -18,13 +18,15 @@ import com.bob.weather.model.WeatherInfo;
 
 /**
  * 数据操作类
+ * 
  * @author Bob
  * @date 2014-10-13 下午8:58:40
- *
+ * 
  */
 public class Utility {
 	/**
 	 * 处理返回的省份数据
+	 * 
 	 * @author Bob
 	 * @date 2014-10-13 2014-10-13
 	 * @param dbService
@@ -38,15 +40,16 @@ public class Utility {
 			for (String p : allProvinces) {
 				String[] array = p.split("\\|");
 				Province province = new Province(array[1], array[0]);
-				dbService.addProvince(province);//插入数据库
+				dbService.addProvince(province);// 插入数据库
 			}
 			return true;
 		}
 		return false;
 	}
-	
+
 	/**
 	 * 处理返回的市数据
+	 * 
 	 * @author Bob
 	 * @date 2014-10-13 2014-10-13
 	 * @param dbService
@@ -55,21 +58,22 @@ public class Utility {
 	 * @return
 	 */
 	public static boolean handleCityData(DBTableService dbService,
-			String response , int provinceId){
-		if(!TextUtils.isEmpty(response)){
+			String response, int provinceId) {
+		if (!TextUtils.isEmpty(response)) {
 			String[] allCities = response.split(",");
-			for (String c:allCities) {
+			for (String c : allCities) {
 				String[] array = c.split("\\|");
-				City city = new City(array[1], array[0], provinceId); 
+				City city = new City(array[1], array[0], provinceId);
 				dbService.addCity(city);
 			}
-			return true ;
+			return true;
 		}
 		return false;
 	}
-	
+
 	/**
 	 * 处理返回的县区数据
+	 * 
 	 * @author Bob
 	 * @date 2014-10-13 2014-10-13
 	 * @param dbService
@@ -78,60 +82,68 @@ public class Utility {
 	 * @return
 	 */
 	public static boolean handleCountryData(DBTableService dbService,
-			String response , int cityId){
-		if(!TextUtils.isEmpty(response)){
+			String response, int cityId) {
+		if (!TextUtils.isEmpty(response)) {
 			String[] allCounties = response.split(",");
-			for (String c:allCounties) {
+			for (String c : allCounties) {
 				String[] array = c.split("\\|");
-				Country country = new Country(array[1], array[0], cityId); 
+				Country country = new Country(array[1], array[0], cityId);
 				dbService.addCountry(country);
 			}
-			return true ;
+			return true;
 		}
 		return false;
 	}
-	//{"weatherinfo":{"city":"昆山","cityid":"101190404","temp1":"25℃","temp2":"17℃","weather":"多云","img1":"d1.gif","img2":"n1.gif","ptime":"11:00"}}
+
+	// {"weatherinfo":{"city":"昆山","cityid":"101190404","temp1":"25℃","temp2":"17℃","weather":"多云","img1":"d1.gif","img2":"n1.gif","ptime":"11:00"}}
 	/**
 	 * 解析天气信息
+	 * 
 	 * @param json
 	 * @return
 	 * @date 2014-10-20 上午11:13:40
 	 */
-	public static List<Map<String,String>> parseWeatherInfo(DBTableService dbService){
-		if(dbService == null){
-			return null ;
+	public static List<Map<String, String>> parseWeatherInfo(DBTableService dbService) {
+		if (dbService == null) {
+			return null;
 		}
 		List<WeatherInfo> list = dbService.getWeatherInfos();
-		List<Map<String,String>> maps = new ArrayList<Map<String,String>>();
-		for (int i = 0; i < list.size(); i++) {
-			try {
-				Map<String,String> map = new HashMap<String, String>();
-				JSONObject jsonObject = new JSONObject(list.get(i).getWeatherInfo()).getJSONObject("weatherinfo");
-				map.put("city", jsonObject.getString("city"));
-				map.put("temp1", jsonObject.getString("temp1"));
-				map.put("temp2", jsonObject.getString("temp2"));
-				map.put("weather", jsonObject.getString("weather"));
-				map.put("ptime", jsonObject.getString("ptime"));
+		List<Map<String, String>> maps = new ArrayList<Map<String, String>>();
+		try {
+			for (int i = 0; i < list.size(); i++) {
+				Map<String, String> map = new HashMap<String, String>();
+				String json = list.get(i).getWeatherInfo();
+				LogUtil.i("Utility", "城市天气：" + json);
+				if (!TextUtils.isEmpty(json)) {
+					JSONObject jsonObject = new JSONObject(json).getJSONObject("weatherinfo");
+					map.put("city", jsonObject.getString("city"));
+					map.put("temp1", jsonObject.getString("temp1"));
+					map.put("temp2", jsonObject.getString("temp2"));
+					map.put("weather", jsonObject.getString("weather"));
+					map.put("ptime", jsonObject.getString("ptime"));
+				}
 				maps.add(map);
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			}
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		
-		return maps ;
+
+		return maps;
 	}
-	
-	public static void handleWeatherInfo(DBTableService dbService , String response){
+
+	public static void handleWeatherInfo(DBTableService dbService,
+			String response) {
 		JSONObject jsonObject;
 		try {
 			jsonObject = new JSONObject(response).getJSONObject("weatherinfo");
 			String cityName = jsonObject.getString("city");
 			String weatherCode = jsonObject.getString("cityid");
-			dbService.addWeatherInfo(new WeatherInfo(cityName, weatherCode, response));
+			dbService.addWeatherInfo(new WeatherInfo(cityName, weatherCode,
+					response));
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
- }
+}

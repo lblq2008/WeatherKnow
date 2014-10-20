@@ -21,10 +21,12 @@ import android.database.sqlite.SQLiteDatabase;
  */
 public class DBTableService {
 
-	private DBHelper dbHelper = null;
+	private  DBHelper dbHelper = null;
 	private static DBTableService dbService ;
+	private static SQLiteDatabase db ;
 	public DBTableService(Context context) {
 		this.dbHelper = new DBHelper(context);
+		db = dbHelper.getWritableDatabase();
 	}
 	
 	public synchronized static DBTableService getInstance(Context context){
@@ -35,14 +37,15 @@ public class DBTableService {
 	}
 	
 	public void addWeatherInfo(WeatherInfo info){
-		SQLiteDatabase db = dbHelper.getWritableDatabase();
+		//SQLiteDatabase db = dbHelper.getWritableDatabase();
+		deleteWeatherInfo(info);
 		ContentValues values = new ContentValues();
 		values.put("city_name", info.getCityName());
 		values.put("weather_code", info.getWeatherCode());
 		values.put("weather_info", info.getWeatherInfo());
 		db.insert(DBHelper.WEATHERTABLE, null, values);
 		if (db != null) {
-			db.close();
+			//db.close();
 		}
 	}
 	
@@ -51,29 +54,29 @@ public class DBTableService {
 //			addWeatherInfo(info);
 //			return ;
 //		}
-		SQLiteDatabase db = dbHelper.getWritableDatabase();
+		//SQLiteDatabase db = dbHelper.getWritableDatabase();
 		ContentValues values = new ContentValues();
 		values.put("city_name", info.getCityName());
 		values.put("weather_code", info.getWeatherCode());
 		values.put("weather_info", info.getWeatherInfo());
 		db.update(DBHelper.WEATHERTABLE, values, " weather_code = ? ", new String[]{info.getWeatherCode()});
 		if (db != null) {
-			db.close();
+			//db.close();
 		}
 	}
 	
 	public int deleteWeatherInfo(WeatherInfo info){
-		SQLiteDatabase db = dbHelper.getWritableDatabase();
+		//SQLiteDatabase db = dbHelper.getWritableDatabase();
 		int count = db.delete(DBHelper.WEATHERTABLE, " weather_code = ? ", new String[]{info.getWeatherCode()});
 		if (db != null) {
-			db.close();
+			//db.close();
 		}
 		return count ;
 	}
 	
 	public List<WeatherInfo> getWeatherInfos(){
 		List<WeatherInfo> list = new ArrayList<WeatherInfo>();
-		SQLiteDatabase db = dbHelper.getReadableDatabase();
+		//SQLiteDatabase db = dbHelper.getReadableDatabase();
 		Cursor cursor = db.query(DBHelper.WEATHERTABLE, null, null, null, null, null, null);
 		while (cursor.moveToNext()) {
 			WeatherInfo weatherInfo = new WeatherInfo();
@@ -81,6 +84,12 @@ public class DBTableService {
 			weatherInfo.setWeatherCode(cursor.getString(cursor.getColumnIndex("weather_code")));
 			weatherInfo.setWeatherInfo(cursor.getString(cursor.getColumnIndex("weather_info")));
 			list.add(weatherInfo);
+		}
+		if(cursor!=null){
+			cursor.close();
+		}
+		if (db != null) {
+			//db.close();
 		}
 		return list ;
 	}
@@ -92,10 +101,10 @@ public class DBTableService {
 	 * @date 2014-10-13 上午10:46:14
 	 */
 	public int deleteProvince(Province province){
-		SQLiteDatabase db = dbHelper.getWritableDatabase();
+		//SQLiteDatabase db = dbHelper.getWritableDatabase();
 		int count = db.delete(DBHelper.PROVINCETABLE, " id = ?  ", new String[]{province.getId() + ""});
 		if (db != null) {
-			db.close();
+			//db.close();
 		}
 		return count ;
 	}
@@ -107,13 +116,13 @@ public class DBTableService {
 	 * @date 2014-10-13 上午10:49:13
 	 */
 	public int updateProvince(Province province){
-		SQLiteDatabase db = dbHelper.getWritableDatabase();
+		//SQLiteDatabase db = dbHelper.getWritableDatabase();
 		ContentValues values = new ContentValues();
 		values.put("province_name", province.getProvinceName());
 		values.put("province_code", province.getProvinceCode());
 		int count = db.update(DBHelper.PROVINCETABLE, values, " id = ? ", new String[]{province.getId() + ""});
 		if (db != null) {
-			db.close();
+			//db.close();
 		}
 		return count ;
 	}
@@ -124,13 +133,13 @@ public class DBTableService {
 	 * @date 2014-10-13 上午10:39:27
 	 */
 	public void addProvince(Province province) {
-		SQLiteDatabase db = dbHelper.getWritableDatabase();
+		//SQLiteDatabase db = dbHelper.getWritableDatabase();
 		ContentValues values = new ContentValues();
 		values.put("province_name", province.getProvinceName());
 		values.put("province_code", province.getProvinceCode());
 		db.insert(DBHelper.PROVINCETABLE, null, values);
 		if (db != null) {
-			db.close();
+			//db.close();
 		}
 	}
 	
@@ -141,7 +150,7 @@ public class DBTableService {
 	 * @date 2014-10-13 上午10:55:54
 	 */
 	public Province getProvince(int id){
-		SQLiteDatabase db = dbHelper.getReadableDatabase();
+		//SQLiteDatabase db = dbHelper.getReadableDatabase();
 		Province province = null;
 		Cursor cursor = db.query(DBHelper.PROVINCETABLE, null, " id = ? ", new String[]{id + ""}, null, null, null);
 		if(cursor.moveToFirst()){
@@ -154,7 +163,7 @@ public class DBTableService {
 			cursor.close();
 		}
 		if (db != null) {
-			db.close();
+			//db.close();
 		}
 		return province ;
 	}
@@ -166,7 +175,7 @@ public class DBTableService {
 	 */
 	public List<Province> getAllProvinces(){
 		List<Province> list = new ArrayList<Province>();
-		SQLiteDatabase db = dbHelper.getReadableDatabase();
+		//SQLiteDatabase db = dbHelper.getReadableDatabase();
 		Cursor cursor = db.query(DBHelper.PROVINCETABLE, null, null , null , null, null, null);
 		while (cursor.moveToNext()) {
 			Province province = new Province();
@@ -179,7 +188,7 @@ public class DBTableService {
 			cursor.close();
 		}
 		if (db != null) {
-			db.close();
+			//db.close();
 		}
 		return list ;
 	}
@@ -190,14 +199,14 @@ public class DBTableService {
 	 * @date 2014-10-13 上午11:02:00
 	 */
 	public void addCity(City city){
-		SQLiteDatabase db = dbHelper.getWritableDatabase();
+		//SQLiteDatabase db = dbHelper.getWritableDatabase();
 		ContentValues values = new ContentValues();
 		values.put("city_name", city.getCityName());
 		values.put("city_code", city.getCityCode());
 		values.put("province_id", city.getProvinceId());
 		db.insert(DBHelper.CITYTABLE, null, values);
 		if (db != null) {
-			db.close();
+			//db.close();
 		}
 	}
 	
@@ -208,7 +217,7 @@ public class DBTableService {
 	 * @date 2014-10-13 上午10:55:54
 	 */
 	public City getCity(int id){
-		SQLiteDatabase db = dbHelper.getReadableDatabase();
+		//SQLiteDatabase db = dbHelper.getReadableDatabase();
 		City city = null;
 		Cursor cursor = db.query(DBHelper.CITYTABLE, null, " id = ? ", new String[]{id + ""}, null, null, null);
 		if(cursor.moveToFirst()){
@@ -222,7 +231,7 @@ public class DBTableService {
 			cursor.close();
 		}
 		if (db != null) {
-			db.close();
+			//db.close();
 		}
 		return city ;
 	}
@@ -234,7 +243,7 @@ public class DBTableService {
 	 */
 	public List<City> getAllProvinceCities(int provinceId){
 		List<City> list = new ArrayList<City>();
-		SQLiteDatabase db = dbHelper.getReadableDatabase();
+		//SQLiteDatabase db = dbHelper.getReadableDatabase();
 		Cursor cursor = db.query(DBHelper.CITYTABLE, null, " province_id = ? " , new String[]{provinceId + ""} , null, null, null);
 		while (cursor.moveToNext()) {
 			City city = new City();
@@ -248,7 +257,7 @@ public class DBTableService {
 			cursor.close();
 		}
 		if (db != null) {
-			db.close();
+			//db.close();
 		}
 		return list ;
 	}
@@ -260,7 +269,7 @@ public class DBTableService {
 	 */
 	public List<City> getAllCities(){
 		List<City> list = new ArrayList<City>();
-		SQLiteDatabase db = dbHelper.getReadableDatabase();
+		//SQLiteDatabase db = dbHelper.getReadableDatabase();
 		Cursor cursor = db.query(DBHelper.CITYTABLE, null, null , null , null, null, null);
 		while (cursor.moveToNext()) {
 			City city = new City();
@@ -274,7 +283,7 @@ public class DBTableService {
 			cursor.close();
 		}
 		if (db != null) {
-			db.close();
+			//db.close();
 		}
 		return list ;
 	}
@@ -285,14 +294,14 @@ public class DBTableService {
 	 * @date 2014-10-13 上午11:02:00
 	 */
 	public void addCountry(Country country){
-		SQLiteDatabase db = dbHelper.getWritableDatabase();
+		//SQLiteDatabase db = dbHelper.getWritableDatabase();
 		ContentValues values = new ContentValues();
 		values.put("country_name", country.getCountryName());
 		values.put("country_code", country.getCountryCode());
 		values.put("city_id", country.getCityId());
 		db.insert(DBHelper.COUNTRYTABLE, null, values);
 		if (db != null) {
-			db.close();
+			//db.close();
 		}
 	}
 	
@@ -303,7 +312,7 @@ public class DBTableService {
 	 * @date 2014-10-13 上午10:55:54
 	 */
 	public Country getCountry(int id){
-		SQLiteDatabase db = dbHelper.getReadableDatabase();
+		///SQLiteDatabase db = dbHelper.getReadableDatabase();
 		Country country = null;
 		Cursor cursor = db.query(DBHelper.COUNTRYTABLE, null, " id = ? ", new String[]{id + ""}, null, null, null);
 		if(cursor.moveToFirst()){
@@ -317,7 +326,7 @@ public class DBTableService {
 			cursor.close();
 		}
 		if (db != null) {
-			db.close();
+			//db.close();
 		}
 		return country ;
 	}
@@ -329,7 +338,7 @@ public class DBTableService {
 	 */
 	public List<Country> getAllCityCountries(int cityId){
 		List<Country> list = new ArrayList<Country>();
-		SQLiteDatabase db = dbHelper.getReadableDatabase();
+		//SQLiteDatabase db = dbHelper.getReadableDatabase();
 		Cursor cursor = db.query(DBHelper.COUNTRYTABLE, null, " city_id = ? " , new String[]{cityId + ""} , null, null, null);
 		while (cursor.moveToNext()) {
 			Country country = new Country();
@@ -343,7 +352,7 @@ public class DBTableService {
 			cursor.close();
 		}
 		if (db != null) {
-			db.close();
+			//db.close();
 		}
 		return list ;
 	}

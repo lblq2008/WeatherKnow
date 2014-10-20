@@ -13,6 +13,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -40,10 +43,7 @@ public class MainActivity extends BaseActivity {
 		list = getListViews();
 		adapter = new WeatherVPAdapter(list);
 		vp_infos.setAdapter(adapter);
-		if(DBTableService.getInstance(this).getAllProvinces().size()>0){
-			Intent intent = new Intent(this, ChoseCityActivity.class);
-			startActivity(intent);
-		}else{
+		if(!(DBTableService.getInstance(this).getWeatherInfos().size()>0)){
 			Intent intent = new Intent(this, ChoseCityActivity.class);
 			startActivity(intent);
 		}
@@ -112,5 +112,27 @@ public class MainActivity extends BaseActivity {
 			// TODO Auto-generated method stub
 			((ViewPager) container).removeView(mList.get(position));
 		}
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// TODO Auto-generated method stub
+		getMenuInflater().inflate(R.menu.main, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// TODO Auto-generated method stub
+		switch (item.getItemId()) {
+		case R.id.action_add_city:
+			Intent intent = new Intent(this, ChoseCityActivity.class);
+			startActivity(intent);
+			break;
+
+		default:
+			break;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 }
