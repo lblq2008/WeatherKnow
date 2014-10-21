@@ -14,7 +14,6 @@ import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,7 +43,7 @@ public class MainActivity extends BaseActivity {
 		adapter = new WeatherVPAdapter(list);
 		vp_infos.setAdapter(adapter);
 		if(!(DBTableService.getInstance(this).getWeatherInfos().size()>0)){
-			Intent intent = new Intent(this, ChoseCityActivity.class);
+			Intent intent = new Intent(this, SelectedActivity.class);
 			startActivity(intent);
 		}
 	}
@@ -126,10 +125,9 @@ public class MainActivity extends BaseActivity {
 		// TODO Auto-generated method stub
 		switch (item.getItemId()) {
 		case R.id.action_add_city:
-			Intent intent = new Intent(this, ChoseCityActivity.class);
+			Intent intent = new Intent(this, SelectedActivity.class);
 			startActivity(intent);
 			break;
-
 		default:
 			break;
 		}

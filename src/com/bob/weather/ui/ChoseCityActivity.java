@@ -3,6 +3,7 @@ package com.bob.weather.ui;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Color;
@@ -51,6 +52,7 @@ public class ChoseCityActivity extends BaseActivity {
 	private ProgressDialog progressDialog;
 	private TextView tv_province ,tv_city,tv_country ;
 
+	@SuppressLint("HandlerLeak")
 	private Handler handler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
@@ -58,12 +60,11 @@ public class ChoseCityActivity extends BaseActivity {
 			super.handleMessage(msg);
 			switch (msg.what) {
 			case 0:
-				progressDialog.dismiss();
 				Toast.makeText(ChoseCityActivity.this, "加载数据异常",Toast.LENGTH_SHORT).show();
+				progressDialog.dismiss();
 				finish();
 				break;
 			case 1:
-				progressDialog.dismiss();
 				provinces = dbService.getAllProvinces();
 				provincesAdapter.refresh(provinces);
 				if (provinces.size() > 0) {
@@ -72,9 +73,9 @@ public class ChoseCityActivity extends BaseActivity {
 				} else {
 					Toast.makeText(ChoseCityActivity.this, "无省份信息",Toast.LENGTH_SHORT).show();
 				}
+				progressDialog.dismiss();
 				break;
 			case 2:
-				progressDialog.dismiss();
 				if (cities.size() > 0) {
 					citiesAdapter.refresh(cities);
 					citiesAdapter.setSelectItem(0);
@@ -82,19 +83,34 @@ public class ChoseCityActivity extends BaseActivity {
 				} else {
 					Toast.makeText(ChoseCityActivity.this, "无城市信息",Toast.LENGTH_SHORT).show();
 				}
+				progressDialog.dismiss();
 				break;
 			case 3:
-				progressDialog.dismiss();
 				if (countries.size() > 0) {
 					countriesAdapter.refresh(countries);
 					countriesAdapter.setSelectItem(0);
 				} else {
 					Toast.makeText(ChoseCityActivity.this, "无县城信息",Toast.LENGTH_SHORT).show();
 				}
+				progressDialog.dismiss();
 				break;
 			case 4:
 				progressDialog.dismiss();
 				Toast.makeText(ChoseCityActivity.this, "选择城市成功",Toast.LENGTH_SHORT).show();
+				String url = Configs.WeatherInfoUrl + msg.arg1 + Configs.html;
+				HttpUtils.requestHttpGet(null, url, new HttpCallBackListener() {
+					@Override
+					public void onSuccess(String response) {
+						// TODO Auto-generated method stub
+						Utility.handleWeatherInfo(DBTableService.getInstance(ChoseCityActivity.this), response);
+					}
+					
+					@Override
+					public void onFailed(String message) {
+						// TODO Auto-generated method stub
+						
+					}
+				});
 				break;
 			case 5:
 				progressDialog.dismiss();
@@ -159,17 +175,21 @@ public class ChoseCityActivity extends BaseActivity {
 		lv_country.setOnItemLongClickListener(new OnItemLongClickListener() {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> arg0, View v,
-					int position, long arg3) {
+					final int position, long arg3) {
 				// TODO Auto-generated method stub
 				String url = Configs.ProvincesUrl + countries.get(position).getCountryCode() + Configs.pxiel ;
 				progressDialog.setMessage("正在选择城市...");
+				countriesAdapter.setSelectItem(position);
 				HttpUtils.requestHttpGet(progressDialog, url, new HttpCallBackListener() {
 					@Override
 					public void onSuccess(String response) {
 						// TODO Auto-generated method stub
 						if(!TextUtils.isEmpty(response)){
-							dbService.addWeatherInfo(new WeatherInfo("", response.split("\\|")[1], ""));
-							handler.sendEmptyMessage(4);
+							dbService.addWeatherInfo(new WeatherInfo(countries.get(position).getCountryName(), response.split("\\|")[1], ""));
+							Message message = Message.obtain();
+							message.what = 4 ;
+							message.arg1 = Integer.parseInt(response.split("\\|")[1]);
+							handler.sendMessage(message);
 						}else{
 							handler.sendEmptyMessage(5);
 						}
