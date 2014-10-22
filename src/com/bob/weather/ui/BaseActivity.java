@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import com.bob.weather.utils.ActivityCollector;
+import com.bob.weather.utils.LogUtil;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -24,6 +25,7 @@ public class BaseActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
+		LogUtil.i("WeatherKnow", getClass().getSimpleName());
 		ActivityCollector.addActivity(this);//加入Activity队列
 		ActionBar actionBar = getActionBar();
 		if(actionBar != null){

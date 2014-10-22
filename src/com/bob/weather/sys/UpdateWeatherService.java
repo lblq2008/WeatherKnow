@@ -18,7 +18,7 @@ import android.os.IBinder;
 import android.os.SystemClock;
 
 public class UpdateWeatherService extends Service {
-
+	public static boolean isChange = true;
 	@Override
 	public IBinder onBind(Intent arg0) {
 		// TODO Auto-generated method stub
