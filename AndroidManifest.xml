@@ -31,7 +31,7 @@
         <activity android:name="com.bob.weather.ui.SelectedActivity"/>
         <service android:name="com.bob.weather.sys.UpdateWeatherService"/>
         <receiver android:name="com.bob.weather.sys.AlarmReceiver"/>
-        <receiver android:name="android.appwidget.AppWidgetProvider">
+        <receiver android:name="com.bob.weather.sys.WeatherWidgetProvider">
             <meta-data 
                 android:name="android.appwidget.provider"
                 android:resource="@xml/weatherwidget_provider"

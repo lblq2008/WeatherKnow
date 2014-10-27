@@ -18,7 +18,6 @@ import android.os.IBinder;
 import android.os.SystemClock;
 
 public class UpdateWeatherService extends Service {
-	public static boolean isChange = true;
 	@Override
 	public IBinder onBind(Intent arg0) {
 		// TODO Auto-generated method stub
@@ -38,11 +37,9 @@ public class UpdateWeatherService extends Service {
 					// TODO Auto-generated method stub
 					Utility.handleWeatherInfo(DBTableService.getInstance(UpdateWeatherService.this), response);
 				}
-				
 				@Override
 				public void onFailed(String message) {
 					// TODO Auto-generated method stub
-					
 				}
 			});
 		}

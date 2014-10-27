@@ -53,4 +53,7 @@ public class Configs {
 	public static String html = ".html" ;
 	
 	public static String WeatherDetailUrl = "http://m.weather.com.cn/data/101190404.html";//暂停维护,不使用
+	
+	
+	public static int currentWeather = 0 ;
 }
