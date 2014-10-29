@@ -9,7 +9,6 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.widget.LinearLayout;
 import android.widget.RemoteViews;
 
 import com.bob.weather.config.Configs;
@@ -71,7 +70,7 @@ public class WeatherWidgetProvider extends AppWidgetProvider {
 		// TODO Auto-generated method stub
 		super.onDisabled(context);
 	}
-
+	
 	private void updateWidgets(Context context,
 			AppWidgetManager appWidgetManager, int appWidgetId) {
 		remoteViews = new RemoteViews(context.getPackageName(), R.layout.weatherwidget_layout);

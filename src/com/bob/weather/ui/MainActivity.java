@@ -128,6 +128,10 @@ public class MainActivity extends BaseActivity {
 			Intent intent = new Intent(this, SelectedActivity.class);
 			startActivity(intent);
 			break;
+		case R.id.action_setting:
+			Intent settingIntent = new Intent(this, SettingActivity.class);
+			startActivity(settingIntent);
+			break;
 		default:
 			break;
 		}

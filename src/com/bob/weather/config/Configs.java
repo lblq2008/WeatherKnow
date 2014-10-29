@@ -55,5 +55,8 @@ public class Configs {
 	public static String WeatherDetailUrl = "http://m.weather.com.cn/data/101190404.html";//暂停维护,不使用
 	
 	
+	/**
+	 * 当前桌面插件展示的天气信息序号
+	 */
 	public static int currentWeather = 0 ;
 }

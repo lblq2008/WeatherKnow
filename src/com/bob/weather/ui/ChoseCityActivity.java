@@ -133,6 +133,9 @@ public class ChoseCityActivity extends BaseActivity {
 
 	private void initViews() {
 		// TODO Auto-generated method stub
+		if(actionBar != null){
+			actionBar.setTitle("城市选择");
+		}
 		dbService = DBTableService.getInstance(this);
 		progressDialog = new ProgressDialog(this);
 		progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);

@@ -21,13 +21,14 @@ import android.view.Window;
  * @date 2014-10-11 上午11:04:29 
  */
 public class BaseActivity extends Activity {
+	ActionBar actionBar = null;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		LogUtil.i("WeatherKnow", getClass().getSimpleName());
 		ActivityCollector.addActivity(this);//加入Activity队列
-		ActionBar actionBar = getActionBar();
+		actionBar = getActionBar();
 		if(actionBar != null){
 			actionBar.setDisplayHomeAsUpEnabled(true);
 		}

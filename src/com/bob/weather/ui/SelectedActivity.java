@@ -21,6 +21,7 @@ import com.bob.weather.db.DBTableService;
 import com.bob.weather.model.WeatherInfo;
 
 public class SelectedActivity extends BaseActivity {
+	
 	private GridView gv_cities;
 	private SelectedCityAdapter adapter;
 	private List<WeatherInfo> list;
@@ -35,6 +36,9 @@ public class SelectedActivity extends BaseActivity {
 
 	private void initViews() {
 		// TODO Auto-generated method stub
+		if(actionBar != null){
+			actionBar.setTitle("已选城市");
+		}
 		gv_cities = (GridView) this.findViewById(R.id.gv_cities);
 		list = DBTableService.getInstance(this).getWeatherInfos();
 		list.add(new WeatherInfo("+", "", ""));

@@ -44,6 +44,8 @@ public class UpdateWeatherService extends Service {
 			});
 		}
 		
+		sendBroadcast(new Intent(WeatherWidgetProvider.UpdateAction));
+		
 		AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 		int anHour = 60*60*1000 ;
 		long triggerTime = SystemClock.elapsedRealtime() + anHour ;
