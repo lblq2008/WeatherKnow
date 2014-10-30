@@ -59,4 +59,7 @@ public class Configs {
 	 * 当前桌面插件展示的天气信息序号
 	 */
 	public static int currentWeather = 0 ;
+	
+	public static String SharePreferenceName = "weather_know" ;
+	public static String UpdateTimeKey = "update_time" ;
 }

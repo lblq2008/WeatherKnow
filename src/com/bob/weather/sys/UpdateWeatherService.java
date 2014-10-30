@@ -8,6 +8,7 @@ import com.bob.weather.inf.HttpCallBackListener;
 import com.bob.weather.model.WeatherInfo;
 import com.bob.weather.utils.HttpUtils;
 import com.bob.weather.utils.LogUtil;
+import com.bob.weather.utils.SharePreUtil;
 import com.bob.weather.utils.Utility;
 
 import android.app.AlarmManager;
@@ -47,8 +48,9 @@ public class UpdateWeatherService extends Service {
 		sendBroadcast(new Intent(WeatherWidgetProvider.UpdateAction));
 		
 		AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-		int anHour = 60*60*1000 ;
-		long triggerTime = SystemClock.elapsedRealtime() + anHour ;
+		//int anHour = 60*60*1000 ;
+		int updateTime = Integer.parseInt(SharePreUtil.getValue(Configs.UpdateTimeKey)) ;//更新时间间隔
+		long triggerTime = SystemClock.elapsedRealtime() + updateTime ;
 		Intent i = new Intent(this, AlarmReceiver.class);
 		PendingIntent pi = PendingIntent.getBroadcast(this, 0, i, 0);
 		alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerTime, pi);
