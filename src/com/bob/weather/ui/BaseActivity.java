@@ -8,6 +8,7 @@ import com.bob.weather.utils.LogUtil;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,15 +23,21 @@ import android.view.Window;
  */
 public class BaseActivity extends Activity {
 	ActionBar actionBar = null;
+	private Context context ;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
+		context = this ;
 		LogUtil.i("WeatherKnow", getClass().getSimpleName());
 		ActivityCollector.addActivity(this);//加入Activity队列
 		actionBar = getActionBar();
 		if(actionBar != null){
-			actionBar.setDisplayHomeAsUpEnabled(true);
+			if(context instanceof MainActivity){
+				actionBar.setDisplayHomeAsUpEnabled(false);
+			}else{
+				actionBar.setDisplayHomeAsUpEnabled(true);
+			}
 		}
 		setOverflowShowingAlways(); 
 	}
